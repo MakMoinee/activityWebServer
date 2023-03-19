@@ -193,15 +193,97 @@
 			                                                                style="color:
 			                                                                white;
 			                                                                float:right;"
-			                                                                data-coreui-toggle="modal"
-			                                                                data-coreui-target="#viewModal<%= usersList.get(i).getUserID()%>">View/Edit</button>
+			                                                                data-toggle="modal"
+			                                                                data-target="#viewModal<%= usersList.get(i).getUserID()%>">View/Edit</button>
+                                                                            <div class="modal fade" id="viewModal<%= usersList.get(i).getUserID()%>" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel<%= usersList.get(i).getUserID()%>"
+                                                                            aria-hidden="true">
+                                                                                    <div class="modal-dialog" role="document">
+                                                                                        <div class="modal-content" style="width: 450px;">
+                                                                                            <div class="modal-header">
+                                                                                                <h5 class="modal-title" id="viewModalLabel<%= usersList.get(i).getUserID()%>" style="font-family: 'Valorant';">View/Edit User</h5>
+                                                                                                <button type="button" style="border:none;background: white;" class="close"
+                                                                                                    data-dismiss="modal" aria-label="Close">
+                                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div class="modal-body">
+                                                                                                <div class="row">
+                                                                                                    <form action="/signup" method="POST" enctype="multipart/form-data" autocomplete="off">
+                                                                                                        <div class="form-group" style="margin-left: 60px;margin-bottom: 20px;">
+                                                                                                            <label for="Username" class="for">Username<span style="color:red">*</span></label>
+                                                                                                        </div>
+                                                                                                        <div class="form-group" style="margin-left: 60px;margin-top: -20px;margin-bottom: 20px;">
+                                                                                                            <input required type="text" name="username" id="" style="width:350px;" value="<%= usersList.get(i).getUserName()%>">
+                                                                                                        </div>
+                                                                                                        <div class="form-group" style="margin-left: 60px;margin-top: -12px;margin-bottom: 20px;">
+                                                                                                            <label for="password" class="for">Password<span style="color:red">*</span></label>                
+                                                                                                        </div>
+                                                                                                        <div class="form-group" style="margin-left: 60px;margin-top: -20px;margin-bottom: 20px;">
+                                                                                                            <input required type="password" pattern="[a-zA-Z0-9]+" name="password"
+                                                                                                                id="apassword" style="width:350px;">
+                                                                                                        </div>
+                                                                                                        <div class="form-group" style="margin-left: 60px;margin-top: -12px;margin-bottom: 20px;">
+                                                                                                            <label for="password" class="for">Retype Password<span
+                                                                                                                    style="color:red">*</span></label>
+                                                                                                        </div>
+                                                                                                        <div class="form-group" style="margin-left: 60px;margin-top: -20px;margin-bottom: 20px;">
+                                                                                                            <input required type="password" pattern="[a-zA-Z0-9]+" name="repassword"
+                                                                                                                id="arepassword" style="width:350px;">
+                                                                                                        </div>
+                                                                            
+                                                                            
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="modal-footer">
+                                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                                <button type="submit" class="btn btn-primary" name="btnSignup"
+                                                                                                    style="background-color: #e80032" value="admin">Add User</button>
+                                                                                            </div>
+                                                                                            </form>
+                                                                                        </div>
+                                                                                    </div>
+                                                                            </div> 
 			                                                            <button class="btn
 			                                                                btn-danger"
 			                                                                style="color:
 			                                                                white;
 			                                                                float:right;"
-			                                                                data-coreui-toggle="modal"
-			                                                                data-coreui-target="#deleteUserModal">Delete</button>
+			                                                                data-toggle="modal"
+			                                                                data-target="#deleteUserModal<%= usersList.get(i).getUserID()%>">Delete</button>
+
+                                                                            <div class="modal fade"
+                                                                                    id="deleteUserModal<%= usersList.get(i).getUserID()%>" tabindex="-1"
+                                                                                    role="dialog"
+                                                                                    aria-labelledby="deleteUserModalLabel<%= usersList.get(i).getUserID()%>"
+                                                                                    aria-hidden="true">
+                                                                                    <div class="modal-dialog" role="document">
+                                                                                        <div class="modal-content">
+                                                                                            <form
+                                                                                                action="<%= Common.hostName %>/users"
+                                                                                                method="POST" enctype="multipart/form-data">
+                                                                                                <div class="modal-body">
+                                                                                                    <h5 class="modal-title"
+                                                                                                        id="deleteUserModalLabel<%= usersList.get(i).getUserID()%>">
+                                                                                                        Do
+                                                                                                        you want to proceed deleting this user ?
+                                                                                                    </h5>
+                                                                                                </div>
+                                                                                                <div class="form-group">
+                                                                                                    <input type="hidden" name="userID" value="<%= usersList.get(i).getUserID()%>">
+                                                                                                </div>
+                                                                                                <div class="modal-footer">
+                                                                                                    <button type="submit"
+                                                                                                        class="btn btn-primary"
+                                                                                                        name="btnArchive" value="yes">Yes,
+                                                                                                        Proceed</button>
+                                                                                                    <button type="button"
+                                                                                                        class="btn btn-secondary"
+                                                                                                        data-dismiss="modal">Close</button>
+                                                                                                </div>
+                                                                                            </form>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
 	                                                        	<% } %>
 	                                                   
 	                                                        </td>
@@ -320,8 +402,18 @@
 
                     <input type="hidden" id="loginSuccess" name="loginSuccess"
                         value="${sessionScope.loginSuccess}">
-                    <input type="hidden" id="loginError" name="loginSuccess"
+                    <input type="hidden" id="loginError" name="loginError"
                         value="${sessionScope.loginError}">
+                    <input type="hidden" id="addUserErrorExist" name="addUserErrorExist"
+                        value="${sessionScope.addUserErrorExist}">
+                    <input type="hidden" id="successAddUser" name="successAddUser"
+                        value="${sessionScope.successAddUser}">
+                    <input type="hidden" id="errorAddUser" name="errorAddUser"
+                        value="${sessionScope.errorAddUser}">
+                    <input type="hidden" id="errorDeleteUser" name="errorDeleteUser"
+                        value="${sessionScope.errorDeleteUser}">
+                    <input type="hidden" id="successDeleteUser" name="successDeleteUser"
+                        value="${sessionScope.successDeleteUser}">
                 </div>
 
                 <div class="modal fade" id="logOutModal" tabindex="-1"
@@ -348,61 +440,135 @@
                 </div>
 
                 <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="width: 450px;">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="signUpModalLabel" style="font-family: 'Valorant';">Add User</h5>
-                    <button type="button" style="border:none;background: white;" class="close"
-                        data-coreui-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <form action="/signup" method="POST" enctype="multipart/form-data" autocomplete="off">
-                            <div class="form-group" style="margin-left: 60px;margin-bottom: 20px;">
-                                <label for="Username" class="for">Username<span style="color:red">*</span></label>
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" style="width: 450px;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="signUpModalLabel" style="font-family: 'Valorant';">Add User</h5>
+                                <button type="button" style="border:none;background: white;" class="close"
+                                    data-coreui-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                            <div class="form-group" style="margin-left: 60px;margin-top: -20px;margin-bottom: 20px;">
-                                <input required type="text" name="username" id="" style="width:350px;">
-                            </div>
-                            <div class="form-group" style="margin-left: 60px;margin-top: -12px;margin-bottom: 20px;">
-                                <label for="password" class="for">Password<span style="color:red">*</span></label>                
-                            </div>
-                            <div class="form-group" style="margin-left: 60px;margin-top: -20px;margin-bottom: 20px;">
-                                <input required type="password" pattern="[a-zA-Z0-9]+" name="password"
-                                    id="apassword" style="width:350px;">
-                                <i class="far fa-eye" id="togglePassword"
-                                    style="margin-left: -30px; cursor: pointer;"></i>
-                            </div>
-                            <div class="form-group" style="margin-left: 60px;margin-top: -12px;margin-bottom: 20px;">
-                                <label for="password" class="for">Retype Password<span
-                                        style="color:red">*</span></label>
-                            </div>
-                            <div class="form-group" style="margin-left: 60px;margin-top: -20px;margin-bottom: 20px;">
-                                <input required type="password" pattern="[a-zA-Z0-9]+" name="repassword"
-                                    id="arepassword" style="width:350px;">
-                                <i class="far fa-eye" id="toggleRePassword"
-                                    style="margin-left: -30px; cursor: pointer;"></i>
-                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <form action="<%= Common.hostName %>/signup" method="POST" enctype="multipart/form-data" autocomplete="off">
+                                        <div class="form-group" style="margin-left: 60px;margin-bottom: 20px;">
+                                            <label for="Username" class="for">Username<span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="form-group" style="margin-left: 60px;margin-top: -20px;margin-bottom: 20px;">
+                                            <input required type="text" name="username" id="" style="width:350px;">
+                                        </div>
+                                        <div class="form-group" style="margin-left: 60px;margin-top: -12px;margin-bottom: 20px;">
+                                            <label for="password" class="for">Password<span style="color:red">*</span></label>                
+                                        </div>
+                                        <div class="form-group" style="margin-left: 60px;margin-top: -20px;margin-bottom: 20px;">
+                                            <input required type="password" pattern="[a-zA-Z0-9]+" name="password"
+                                                id="apassword" style="width:350px;">
+                                        </div>
+                                        <div class="form-group" style="margin-left: 60px;margin-top: -12px;margin-bottom: 20px;">
+                                            <label for="password" class="for">Retype Password<span
+                                                    style="color:red">*</span></label>
+                                        </div>
+                                        <div class="form-group" style="margin-left: 60px;margin-top: -20px;margin-bottom: 20px;">
+                                            <input required type="password" pattern="[a-zA-Z0-9]+" name="repassword"
+                                                id="arepassword" style="width:350px;">
+                                        </div>
 
 
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" name="btnSignup"
+                                    style="background-color: #e80032" value="admin">Add User</button>
+                            </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" name="btnSignup"
-                        style="background-color: #e80032" value="admin">Add User</button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
                 <script>
                     let login = document.getElementById("loginSuccess").value;
                     let loginError = document.getElementById("loginError").value;
+                    let addUserErrorExist = document.getElementById("addUserErrorExist").value;
+                    let successAddUser = document.getElementById("successAddUser").value;
+                    let errorAddUser = document.getElementById("errorAddUser").value;
+                    let successDeleteUser = document.getElementById("successDeleteUser").value;
+                    let errorDeleteUser = document.getElementById("errorDeleteUser").value;
+
+
+                    if(successDeleteUser){
+                    setTimeout(() => {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Successfully Deleted User',
+                        showConfirmButton: false,
+                        timer: 800
+                    });
+
+                    <% request.getSession().removeAttribute("successDeleteUser"); %>
+                    }, 800);
+                    }
+
+                    if(errorDeleteUser){
+                    setTimeout(() => {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: 'Failed to delete user, please try again later.',
+                        showConfirmButton: false,
+                        timer: 800
+                    });
+
+                    <% request.getSession().removeAttribute("errorDeleteUser"); %>
+                    }, 800);
+                    }
+
+
+                    if(errorAddUser){
+                    setTimeout(() => {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: 'Failed to add user, please try again later.',
+                        showConfirmButton: false,
+                        timer: 800
+                    });
+
+                    <% request.getSession().removeAttribute("errorAddUser"); %>
+                    }, 800);
+                    }
+
+                    if(successAddUser){
+                    setTimeout(() => {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Successfully Added User',
+                        showConfirmButton: false,
+                        timer: 800
+                    });
+
+                    <% request.getSession().removeAttribute("successAddUser"); %>
+                    }, 800);
+                    }
+
+                    if(addUserErrorExist){
+                    setTimeout(() => {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: 'User exist already, Please create new user with unique username and password',
+                        showConfirmButton: false,
+                        timer: 800
+                    });
+
+                    <% request.getSession().removeAttribute("addUserErrorExist"); %>
+                    }, 800);
+                    }
+
 
                     if(login){
                     setTimeout(() => {

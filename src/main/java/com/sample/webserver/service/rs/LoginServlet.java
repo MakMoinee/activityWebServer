@@ -26,12 +26,7 @@ import com.sample.webserver.services.LocalSqlite;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private LocalSqlite sqlite = new LocalSqlite(new LocalSqliteListener() {
-
-		public void onConnectionError(Exception e) {
-			System.out.println("Error connnecting to sqlite");
-		};
-	});
+	private LocalSqlite sqlite;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -61,7 +56,12 @@ public class LoginServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		Users users = new Users.UserBuilder().setUserName(username).setPassword(password).build();
+		sqlite = new LocalSqlite(new LocalSqliteListener() {
 
+			public void onConnectionError(Exception e) {
+				System.out.println("Error connnecting to sqlite");
+			};
+		});
 		sqlite.login(users, new DBOperationsListener() {
 
 			@Override

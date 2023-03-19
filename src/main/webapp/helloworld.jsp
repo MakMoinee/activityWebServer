@@ -1,6 +1,14 @@
-<!DOCTYPE html>
+<%@page import="com.sample.webserver.models.Users"%>
 <%@page import="com.sample.webserver.common.*" %>
 	<%@ page session="true" %>
+<%
+Users users = (Users) request.getSession().getAttribute("admin");
+if(users!=null){
+	response.sendRedirect("dashboard.jsp");
+}
+%>
+
+<!DOCTYPE html>
 		<html lang="en">
 
 			<head>

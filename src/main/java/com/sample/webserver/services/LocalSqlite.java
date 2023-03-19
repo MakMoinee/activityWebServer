@@ -22,9 +22,11 @@ public class LocalSqlite {
 	public LocalSqlite(LocalSqliteListener li) {
 		this.listener = li;
 		try {
-			Class.forName("org.sqlite.JDBC");
-			this.con = DriverManager.getConnection(connectionString);
-			System.out.println("Sqlite connected");
+			if (this.con == null || this.con.isClosed()) {
+				Class.forName("org.sqlite.JDBC");
+				this.con = DriverManager.getConnection(connectionString);
+				System.out.println("Sqlite connected");
+			}
 		} catch (Exception e) {
 			listener.onConnectionError(e);
 		}
@@ -37,15 +39,104 @@ public class LocalSqlite {
 			stmt.setString(2, users.getPassword());
 			ResultSet set = stmt.executeQuery();
 			if (set.next()) {
-				if (this.con.isClosed())
-					this.con.close();
 				users.setUserType(set.getInt("userType"));
 				users.setUserID(set.getInt("userID"));
+				if (!set.isClosed())
+					set.close();
 				dbListener.onSuccess(users);
+
 			} else {
-				if (this.con.isClosed())
+				if (!set.isClosed())
+					set.close();
+				if (!this.con.isClosed())
 					this.con.close();
 				dbListener.onError(new Exception("empty"));
+
+			}
+		} catch (Exception e) {
+			try {
+				if (!this.con.isClosed())
+					this.con.close();
+			} catch (Exception e2) {
+
+			}
+			dbListener.onError(e);
+		}
+	}
+
+	public void getAllUsers(DBOperationsListener dbListener) {
+		try {
+			stmt = this.con.prepareStatement(Common.getAllUsersQuery);
+			ResultSet set = stmt.executeQuery();
+			List<Users> usersList = new ArrayList<>();
+			while (set.next()) {
+				Users users = new Users.UserBuilder().setUserID(set.getInt("userID"))
+						.setUserName(set.getString("userName")).setUserType(set.getInt("userType")).build();
+
+				usersList.add(users);
+			}
+
+			if (!this.con.isClosed())
+				this.con.close();
+
+			if (!set.isClosed())
+				set.close();
+
+			if (usersList.size() > 0) {
+				dbListener.onSuccess(usersList);
+			} else {
+				dbListener.onError(new Exception("empty"));
+			}
+		} catch (Exception e) {
+			try {
+				if (!this.con.isClosed())
+					this.con.close();
+			} catch (Exception e2) {
+
+			}
+			dbListener.onError(e);
+		}
+	}
+
+	public void createUser(Users users, DBOperationsListener dbListener) {
+		try {
+
+			stmt = this.con.prepareStatement(Common.insertUserQuery);
+			stmt.setString(1, users.getUserName());
+			stmt.setString(2, users.getPassword());
+			int affectedRows = stmt.executeUpdate();
+			if (affectedRows > 0) {
+				if (!this.con.isClosed())
+					this.con.close();
+				dbListener.onSuccess();
+			} else {
+				if (!this.con.isClosed())
+					this.con.close();
+				dbListener.onError(new Exception("failed to add"));
+			}
+
+		} catch (Exception e) {
+			try {
+				con.close();
+			} catch (Exception e2) {
+
+			}
+			dbListener.onError(e);
+		}
+	}
+
+	public void deleteUser(int userID, DBOperationsListener dbOperationsListener) {
+		try {
+
+			stmt = this.con.prepareStatement(Common.deleteUserQuery);
+			stmt.setInt(1, userID);
+			int affectedRows = stmt.executeUpdate();
+			if (!this.con.isClosed())
+				this.con.close();
+			if (affectedRows > 0) {
+				dbOperationsListener.onSuccess();
+			} else {
+				dbOperationsListener.onError(new Exception("failed to delete"));
 			}
 		} catch (Exception e) {
 			try {
@@ -53,37 +144,7 @@ public class LocalSqlite {
 			} catch (Exception e2) {
 
 			}
-			// TODO: handle exception
-			dbListener.onError(e);
-		}
-	}
-	
-	public void getAllUsers(DBOperationsListener dbListener){
-		try {
-			stmt = this.con.prepareStatement(Common.getAllUsersQuery);
-			ResultSet set = stmt.executeQuery();
-			List<Users> usersList = new ArrayList<>();
-			while(set.next()) {
-				Users users = new Users.UserBuilder()
-						.setUserID(set.getInt("userID"))
-						.setUserName(set.getString("userName"))
-						.setUserType(set.getInt("userType"))
-						.build();
-				
-				usersList.add(users);
-			}
-			
-			if(usersList.size()>0) {
-				if (this.con.isClosed())
-					this.con.close();
-				dbListener.onSuccess(usersList);
-			}else {
-				if (this.con.isClosed())
-					this.con.close();
-				dbListener.onError(new Exception("empty"));
-			}
-		}catch(Exception e) {
-			dbListener.onError(e);
+			dbOperationsListener.onError(e);
 		}
 	}
 

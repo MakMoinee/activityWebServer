@@ -1,7 +1,7 @@
 package com.sample.webserver.service.rs;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,25 +13,25 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sample.webserver.interfaces.DBOperationsListener;
 import com.sample.webserver.interfaces.LocalSqliteListener;
 import com.sample.webserver.models.Users;
 import com.sample.webserver.services.LocalSqlite;
 
 /**
- * Servlet implementation class UsersServlet
+ * Servlet implementation class SignupServlet
  */
 @MultipartConfig
-@WebServlet("/users")
-public class UsersServlet extends HttpServlet {
+@WebServlet("/signup")
+public class SignupServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	LocalSqlite sql;
+	private LocalSqlite sqlite;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public UsersServlet() {
+	public SignupServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -42,13 +42,7 @@ public class UsersServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		response.setContentType("application/json;");
-
-		PrintWriter out = response.getWriter();
-		out.println("<p>Hello World</p>");
-
-		response.sendRedirect("/webServerActivity/helloworld.jsp");
+		doRedirect(response);
 	}
 
 	/**
@@ -57,42 +51,59 @@ public class UsersServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String rawUserID = request.getParameter("userID");
+		sqlite = new LocalSqlite(new LocalSqliteListener() {
+
+			@Override
+			public void onConnectionError(Exception e) {
+				// TODO Auto-generated method stub
+				System.out.println("Connection Error: " + e.getMessage());
+			}
+		});
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
 		HttpSession session = request.getSession();
-		if (rawUserID.equals("")) {
-			session.setAttribute("errorDeleteUser", true);
-			response.sendRedirect("dashboard.jsp");
+		if (username == null || password == null) {
+			response.sendRedirect("helloworld.jsp");
 		} else {
-			int userID = Integer.parseInt(rawUserID);
-			sql = new LocalSqlite(new LocalSqliteListener() {
+			Users users = new Users.UserBuilder().setPassword(password).setUserName(username).build();
+			String usersListRaw = (String) request.getSession().getAttribute("adminUsers");
+			Type listType = new TypeToken<List<Users>>() {
+			}.getType();
+			List<Users> usersList = new Gson().fromJson(usersListRaw, listType);
+			Boolean isExist = false;
 
-				@Override
-				public void onConnectionError(Exception e) {
-					System.out.println("onConnectionError on UsersServlet: " + e.getMessage());
+			for (Users u : usersList) {
+				if (u.getUserName().equals(username)) {
+					isExist = true;
+					break;
 				}
-			});
+			}
 
-			sql.deleteUser(userID, new DBOperationsListener() {
+			if (isExist) {
+				session.setAttribute("addUserErrorExist", true);
+				doRedirect(response);
+			} else {
+				sqlite.createUser(users, new DBOperationsListener() {
 
-				@Override
-				public void onSuccess() {
-					session.setAttribute("successDeleteUser", true);
-					loadAllUsers(response, session);
-				}
+					@Override
+					public void onSuccess() {
+						session.setAttribute("successAddUser", true);
+						loadAllUsers(response, session);
+					}
 
-				@Override
-				public void onError(Exception e) {
-					session.setAttribute("errorDeleteUser", true);
-					doRedirect(response);
-				}
-			});
-
+					@Override
+					public void onError(Exception e) {
+						System.out.println(e.getMessage());
+						session.setAttribute("errorAddUser", true);
+						doRedirect(response);
+					}
+				});
+			}
 		}
-
 	}
 
 	private void loadAllUsers(HttpServletResponse response, HttpSession session) {
-		sql = new LocalSqlite(new LocalSqliteListener() {
+		sqlite = new LocalSqlite(new LocalSqliteListener() {
 
 			@Override
 			public void onConnectionError(Exception e) {
@@ -100,7 +111,7 @@ public class UsersServlet extends HttpServlet {
 			}
 		});
 
-		sql.getAllUsers(new DBOperationsListener() {
+		sqlite.getAllUsers(new DBOperationsListener() {
 
 			@Override
 			public void onSuccess(List<Users> users) {
