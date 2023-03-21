@@ -19,6 +19,8 @@ public class RestHandler {
 				.method("GET", null).header("Content-Type", "application/json").build();
 		try {
 			var response = client.send(request, null);
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

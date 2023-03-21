@@ -3,8 +3,8 @@
 <%@ page session="true"%>
 <%
 Users users = (Users) request.getSession().getAttribute("admin");
-if (users != null) {
-	response.sendRedirect("dashboard.jsp");
+if (users == null) {
+	response.sendRedirect("helloworld.jsp");
 }
 %>
 
@@ -60,16 +60,17 @@ if (users != null) {
 				<div class="col-12">
 					<nav class="main-nav">
 						<!-- ***** Logo Start ***** -->
-						<a href="#" class="logo" style="font-family: 'Valorant';">Valorant
+						<a href="#" class="logo"
+							style="font-family: 'Valorant'; color: #FFFFFF !important;">Valorant
 							InfoSys</a>
 						<!-- ***** Logo End ***** -->
 						<!-- ***** Menu Start ***** -->
 						<ul class="nav">
-							<li class="scroll-to-section"><a href=""
-								<%=Common.hostName%>/helloworld.jsp" class="active">Home</a></li>
-							<li class="scroll-to-section"><a href="<%=Common.hostName%>/about.jsp">About</a></li>
+							<li class="scroll-to-section"><a href="#" 
+								style="color: #FFFFFF !important;">Dashboard</a></li>
+							<li class="scroll-to-section"><a href="<%=Common.hostName%>/aboutdash.jsp" class="active">About</a></li>
 							<li class="scroll-to-section"><a href="#login"
-								data-toggle="modal" data-target="#loginModal">Login</a></li>
+								data-toggle="modal" data-target="#logOutModal">Logout</a></li>
 						</ul>
 						<!-- ***** Menu End ***** -->
 					</nav>
@@ -88,23 +89,15 @@ if (users != null) {
 		<div class="header-text">
 			<div class="container">
 				<div class="row">
-					<div class="left-text col-lg-6 col-md-6 col-sm-12 col-xs-12"
-						data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-						<h1>
-							Valorant InfoSys is free <strong>for YOU</strong>
-						</h1>
-						<h2>
-							By: <b>Jenneth Canlas</b>
-						</h2>
-						<p>Create an account and free to use nice and exciting
-							contents from valorant</p>
-						<a href="#about" class="main-button-slider">Find Out More</a>
-					</div>
-					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"
-						data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
-						<img src="<%=Common.hostName%>/assets/images/hey.png"
-							class="rounded img-fluid d-block mx-auto"
-							alt="First Vector Graphic">
+					<div class="col-lg-12">
+						<center>
+							<img src="<%=Common.hostName%>/assets/images/profile.jpg" alt="" srcset=""
+								width="250px" height="250px">
+							<p>
+							<h3 style="color:white;">Jenneth Canlas Information Technology Student Who Loves
+								Playing Games</h3>
+							</p>
+						</center>
 					</div>
 				</div>
 			</div>
@@ -153,7 +146,29 @@ if (users != null) {
 
 	<!-- Global Init -->
 	<script src="<%=Common.hostName%>/assets/js/custom.js"></script>
-
+	<div class="modal fade" id="logOutModal" tabindex="-1" role="dialog"
+	aria-labelledby="logOutModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form action="<%=Common.hostName%>/logout" method="GET">
+				<div class="modal-body">
+					<h5 class="modal-title" id="logOutModalLabel">Do you want to
+						proceed logging out ?</h5>
+				</div>
+				<div class="modal-footer">
+					<button type="submit"
+						class="btn
+									btn-primary">Yes,
+						Proceed</button>
+					<button type="button"
+						class="btn
+									btn-secondary"
+						data-dismiss="modal">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 	<div class="modal fade " id="loginModal" tabindex="-1" role="dialog"
 		aria-labelledby="loginModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">

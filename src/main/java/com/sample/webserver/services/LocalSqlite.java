@@ -98,6 +98,40 @@ public class LocalSqlite {
 		}
 	}
 
+	public void getAllUsersOnly(DBOperationsListener dbListener) {
+		try {
+			stmt = this.con.prepareStatement(Common.getAllUsersOnlyQuery);
+			ResultSet set = stmt.executeQuery();
+			List<Users> usersList = new ArrayList<>();
+			while (set.next()) {
+				Users users = new Users.UserBuilder().setUserID(set.getInt("userID"))
+						.setUserName(set.getString("userName")).setUserType(set.getInt("userType")).build();
+
+				usersList.add(users);
+			}
+
+			if (!this.con.isClosed())
+				this.con.close();
+
+			if (!set.isClosed())
+				set.close();
+
+			if (usersList.size() > 0) {
+				dbListener.onSuccess(usersList);
+			} else {
+				dbListener.onError(new Exception("empty"));
+			}
+		} catch (Exception e) {
+			try {
+				if (!this.con.isClosed())
+					this.con.close();
+			} catch (Exception e2) {
+
+			}
+			dbListener.onError(e);
+		}
+	}
+
 	public void createUser(Users users, DBOperationsListener dbListener) {
 		try {
 
@@ -137,6 +171,32 @@ public class LocalSqlite {
 				dbOperationsListener.onSuccess();
 			} else {
 				dbOperationsListener.onError(new Exception("failed to delete"));
+			}
+		} catch (Exception e) {
+			try {
+				con.close();
+			} catch (Exception e2) {
+
+			}
+			dbOperationsListener.onError(e);
+		}
+	}
+
+	public void updateUser(Users users, DBOperationsListener dbOperationsListener) {
+		try {
+
+			stmt = this.con.prepareStatement(Common.updateUserQuery);
+			stmt.setString(1, users.getUserName());
+			stmt.setString(2, users.getPassword());
+			stmt.setInt(3, users.getUserID());
+
+			int affectedRows = stmt.executeUpdate();
+			if (!this.con.isClosed())
+				this.con.close();
+			if (affectedRows > 0) {
+				dbOperationsListener.onSuccess();
+			} else {
+				dbOperationsListener.onError(new Exception("failed to update"));
 			}
 		} catch (Exception e) {
 			try {

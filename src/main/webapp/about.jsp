@@ -66,8 +66,8 @@ if (users != null) {
 						<!-- ***** Menu Start ***** -->
 						<ul class="nav">
 							<li class="scroll-to-section"><a href=""
-								<%=Common.hostName%>/helloworld.jsp" class="active">Home</a></li>
-							<li class="scroll-to-section"><a href="<%=Common.hostName%>/about.jsp">About</a></li>
+								<%=Common.hostName%>/helloworld.jsp" >Home</a></li>
+							<li class="scroll-to-section"><a href="<%=Common.hostName%>/about.jsp" class="active">About</a></li>
 							<li class="scroll-to-section"><a href="#login"
 								data-toggle="modal" data-target="#loginModal">Login</a></li>
 						</ul>
@@ -88,23 +88,15 @@ if (users != null) {
 		<div class="header-text">
 			<div class="container">
 				<div class="row">
-					<div class="left-text col-lg-6 col-md-6 col-sm-12 col-xs-12"
-						data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-						<h1>
-							Valorant InfoSys is free <strong>for YOU</strong>
-						</h1>
-						<h2>
-							By: <b>Jenneth Canlas</b>
-						</h2>
-						<p>Create an account and free to use nice and exciting
-							contents from valorant</p>
-						<a href="#about" class="main-button-slider">Find Out More</a>
-					</div>
-					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"
-						data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
-						<img src="<%=Common.hostName%>/assets/images/hey.png"
-							class="rounded img-fluid d-block mx-auto"
-							alt="First Vector Graphic">
+					<div class="col-lg-12">
+						<center>
+							<img src="<%=Common.hostName%>/assets/images/profile.jpg" alt="" srcset=""
+								width="250px" height="250px">
+							<p>
+							<h3 style="color:white;">Jenneth Canlas Information Technology Student Who Loves
+								Playing Games</h3>
+							</p>
+						</center>
 					</div>
 				</div>
 			</div>
